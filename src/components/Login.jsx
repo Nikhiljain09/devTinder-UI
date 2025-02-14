@@ -7,8 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
-  const [emailId, setEmailId] = useState("");
-  const [password, setPassword] = useState("");
+  const [emailId, setEmailId] = useState("virat@gmail.com");
+  const [password, setPassword] = useState("Virat123");
+  const [error, setError] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,10 +24,10 @@ const Login = () => {
         },
         { withCredentials: true }
       );
-      dispatch(addUser(res.data));
+      dispatch(addUser(res.data.user));
       navigate("/");
     } catch (err) {
-      console.log("Error:", err);
+      setError(err?.response?.data || "Something went wrong");
     }
   };
   return (
@@ -35,10 +36,12 @@ const Login = () => {
         <div className="card-body">
           <h2 className="card-title font-bold justify-center">Login</h2>
           <div>
+            {<p className="text-red-600">{error} </p>}
             <label className="form-control w-full max-w-xs my-2">
               <span className="ml-2 p-2 font-bold">Email -{emailId}</span>
               <input
                 type="text"
+                value={emailId}
                 placeholder="Enter your EmailId"
                 className="input input-bordered w-full max-w-xs "
                 onChange={(e) => setEmailId(e.target.value)}
@@ -48,6 +51,7 @@ const Login = () => {
               <span className="ml-2 p-2 font-bold">Password: {password}</span>
               <input
                 type="password"
+                value={password}
                 placeholder="Enter your Password"
                 className="input input-bordered w-full max-w-xs"
                 onChange={(e) => setPassword(e.target.value)}
